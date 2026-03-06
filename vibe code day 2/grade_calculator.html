@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #667eea);
+            background-size: 300% 300%;
+            animation: gradient-shift 6s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 0.95em;
+        }
+
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            margin: 20px 0;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .subjects-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .subject-input {
+            position: relative;
+        }
+
+        .subject-input label {
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .subject-input input {
+            padding: 10px 12px;
+            font-size: 0.95em;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .reset-btn {
+            background: #f0f0f0;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .reset-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+            animation: slideIn 0.4s ease;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .status-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .status-pass {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .status-fail {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .grade-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .grade-item {
+            text-align: center;
+        }
+
+        .grade-label {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .grade-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+            background: #f0f0f0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+
+        .marks-display {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .mark-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mark-item:last-child {
+            border-bottom: none;
+        }
+
+        .mark-name {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .mark-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Grade Calculator</h1>
+            <p>Calculate your academic performance</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <form id="gradeForm">
+            <!-- Student Name -->
+            <div class="form-group">
+                <label for="studentName">Student Name</label>
+                <input type="text" id="studentName" placeholder="Enter full name" required>
+                <div class="error-message" id="nameError"></div>
+            </div>
+
+            <!-- Subjects Marks -->
+            <label style="display: block; margin-bottom: 15px; color: #333; font-weight: 600;">Subject Marks (0-100)</label>
+            <div class="subjects-container">
+                <div class="subject-input">
+                    <label for="math">Mathematics</label>
+                    <input type="number" id="math" min="0" max="100" placeholder="0-100" required>
+                    <div class="error-message" id="mathError"></div>
+                </div>
+
+                <div class="subject-input">
+                    <label for="science">Science</label>
+                    <input type="number" id="science" min="0" max="100" placeholder="0-100" required>
+                    <div class="error-message" id="scienceError"></div>
+                </div>
+
+                <div class="subject-input">
+                    <label for="english">English</label>
+                    <input type="number" id="english" min="0" max="100" placeholder="0-100" required>
+                    <div class="error-message" id="englishError"></div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="calculate-btn">Calculate Grade</button>
+                <button type="reset" class="reset-btn">Reset</button>
+            </div>
+        </form>
+
+        <!-- Results Section -->
+        <div class="results" id="results">
+            <div class="divider"></div>
+
+            <!-- Student Info -->
+            <div class="result-card">
+                <div class="result-row">
+                    <span class="result-label">Student Name:</span>
+                    <span class="result-value" id="resultName"></span>
+                </div>
+            </div>
+
+            <!-- Marks Display -->
+            <div class="marks-display">
+                <div class="mark-item">
+                    <span class="mark-name">Mathematics:</span>
+                    <span class="mark-value" id="resultMath"></span>
+                </div>
+                <div class="mark-item">
+                    <span class="mark-name">Science:</span>
+                    <span class="mark-value" id="resultScience"></span>
+                </div>
+                <div class="mark-item">
+                    <span class="mark-name">English:</span>
+                    <span class="mark-value" id="resultEnglish"></span>
+                </div>
+            </div>
+
+            <!-- Grade and Average -->
+            <div class="grade-display">
+                <div class="grade-item">
+                    <div class="grade-label">Average</div>
+                    <div class="grade-value" id="resultAverage"></div>
+                </div>
+                <div class="grade-item">
+                    <div class="grade-label">Grade</div>
+                    <div class="grade-value" id="resultGrade"></div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="status-box" id="statusBox"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('gradeForm');
+        const resultsDiv = document.getElementById('results');
+
+        function getLetterGrade(average) {
+            if (average >= 75) return 'A';
+            if (average >= 60) return 'B';
+            if (average >= 40) return 'C';
+            return 'F';
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+        }
+
+        function validateInputs(name, math, science, english) {
+            let isValid = true;
+
+            if (!name.trim()) {
+                document.getElementById('nameError').textContent = 'Name is required';
+                document.getElementById('nameError').classList.add('show');
+                isValid = false;
+            }
+
+            [
+                { value: math, id: 'mathError', subject: 'Mathematics' },
+                { value: science, id: 'scienceError', subject: 'Science' },
+                { value: english, id: 'englishError', subject: 'English' }
+            ].forEach(({ value, id, subject }) => {
+                if (isNaN(value) || value === '') {
+                    document.getElementById(id).textContent = `Enter a valid number`;
+                    document.getElementById(id).classList.add('show');
+                    isValid = false;
+                } else if (value < 0 || value > 100) {
+                    document.getElementById(id).textContent = `Must be 0-100`;
+                    document.getElementById(id).classList.add('show');
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            clearErrors();
+
+            const name = document.getElementById('studentName').value;
+            const math = parseFloat(document.getElementById('math').value);
+            const science = parseFloat(document.getElementById('science').value);
+            const english = parseFloat(document.getElementById('english').value);
+
+            if (!validateInputs(name, math, science, english)) {
+                return;
+            }
+
+            // Calculate average
+            const average = (math + science + english) / 3;
+            const letterGrade = getLetterGrade(average);
+            const status = average >= 40 ? 'PASS' : 'FAIL';
+
+            // Display results
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultMath').textContent = math.toFixed(2);
+            document.getElementById('resultScience').textContent = science.toFixed(2);
+            document.getElementById('resultEnglish').textContent = english.toFixed(2);
+            document.getElementById('resultAverage').textContent = average.toFixed(2);
+            document.getElementById('resultGrade').textContent = letterGrade;
+
+            const statusBox = document.getElementById('statusBox');
+            statusBox.textContent = `Status: ${status}`;
+            statusBox.className = `status-box ${status === 'PASS' ? 'status-pass' : 'status-fail'}`;
+
+            resultsDiv.classList.add('show');
+        });
+
+        // Reset button
+        form.addEventListener('reset', function () {
+            clearErrors();
+            resultsDiv.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
