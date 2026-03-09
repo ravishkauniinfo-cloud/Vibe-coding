@@ -30,12 +30,12 @@ def main():
     RED = "\033[91m"
     RESET = "\033[0m"
     
-    print(f"{CYAN}{'='*50}")
+    print(f"\n{CYAN}{'='*50}")
     print(f"{'GRADE CALCULATOR':^50}")
-    print(f"{'='*50}{RESET}")
+    print(f"{'='*50}{RESET}\n")
     
     # Get student name
-    name = input(f"\n{CYAN}Enter student's name: {RESET}")
+    name = input(f"{CYAN}Enter student's name: {RESET}")
     
     # Get marks for each subject
     print(f"\n{CYAN}Enter marks for each subject (0-100):{RESET}")
@@ -51,22 +51,13 @@ def main():
     status = "PASS" if average >= 40 else "FAIL"
     status_color = GREEN if average >= 40 else RED
     
-    # Display results
-    print(f"\n{CYAN}{'='*50}")
-    print(f"{'RESULT':^50}")
-    print(f"{'='*50}{RESET}")
-    
-    print(f"\n{CYAN}Student Name:{RESET} {name}")
-    print(f"\n{CYAN}Subject Marks:{RESET}")
-    print(f"  Mathematics: {math_marks:.2f}")
-    print(f"  Science: {science_marks:.2f}")
-    print(f"  English: {english_marks:.2f}")
-    
-    print(f"\n{CYAN}Average:{RESET} {average:.2f}")
-    print(f"{CYAN}Letter Grade:{RESET} {letter_grade}")
-    
-    print(f"\n{status_color}Status: {status}{RESET}")
-    print(f"\n{CYAN}{'='*50}{RESET}")
+    # Display results in clean format
+    print(f"\n{CYAN}------------------------------")
+    print(f"Name          : {name}")
+    print(f"Average       : {average:.2f}")
+    print(f"Grade         : {letter_grade}")
+    print(f"Status        : {status_color}{status}{RESET}{CYAN}")
+    print(f"------------------------------{RESET}\n")
 
 
 if __name__ == "__main__":
